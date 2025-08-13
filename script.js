@@ -25,7 +25,7 @@ const app = new Vue({
       //POSTメソッドで送るパラメーターを作成
       const param = {
         Date: this.Date,
-        Inout: "支出",
+        Inout: this.Inout,
         Category: this.selected,
         Amount: this.Amount
       };

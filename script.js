@@ -35,7 +35,7 @@ const app = new Vue({
         "https://m3h-rintarootsuka-0730.azurewebsites.net/api/insert",
         param
       );
-console.log(param);
+console.log(response);
       //結果をコンソールに出力
     },
     // データベースからデータを取得する関数
@@ -77,6 +77,54 @@ console.log(param);
 
       //結果リストを表示用配列に代入
       this.dataList = response.data.List;
+    },
+        // Cookieから指定された名前の値を取得する関数
+    getCookie: function(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+      return null;
+    },
+
+    // サーバーに対してセッションチェックAPIを呼び出す関数
+    checkSession: async function() {
+      // CookieからセッションIDを取得
+      const sessionId = this.getCookie("session_id");
+
+      // セッションIDが存在しない場合は即エラー表示
+      if (!sessionId) {
+        this.dialogMessage = "セッションが存在しません。";
+        this.dialog = true;
+        return;
+      }
+
+      try {
+        // CheckSession APIを呼び出してセッションの状態を確認
+        const response = await axios.post('※ここにCheckSessionのURLを記載※', {
+          SessionId: sessionId
+        });
+
+        // セッションが有効な場合はスナックバーで通知
+        if (response.data.status === "Success") {
+          this.snackbarMessage = `セッションは有効です。更新時刻: ${response.data.updatedAt}`;
+          this.snackbar = true;
+          console.log("セッションチェック成功:", response.data);
+        } else {
+          // セッションが無効な場合はダイアログで警告表示
+          this.dialogMessage = response.data.message;
+          this.dialog = true;
+        }
+      } catch (error) {
+        // API呼び出し失敗時の処理（ネットワークエラーなど）
+        console.error("セッションチェックエラー:", error);
+        this.dialogMessage = "セッションの確認に失敗しました。";
+        this.dialog = true;
+      }
+    },
+
+    // ログイン画面にリダイレクトする関数（セッション切れ時など）
+    redirectToLogin: function() {
+      window.location.href = "index.html";
     }
   }
 });

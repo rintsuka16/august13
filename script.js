@@ -6,7 +6,12 @@ const app = new Vue({
     Inout: "", //パラメーター「Name」格納変数
     selected: "", //パラメーター「Name」格納変数
     Amount: "", //パラメーター「Name」格納変数
-    dataList: [] // データ表示用配列
+    dataList: [], // データ表示用配列
+    snackbar: false,     
+    snackbarMessage: '',   
+    dialog: false,       
+    dialogMessage: '' 
+
   },
   methods: {
     // DBにデータを追加する関数

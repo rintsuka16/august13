@@ -1,68 +1,108 @@
 <!DOCTYPE html>
-<html lang="jp" >
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Untitled</title>
-  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'>
-<link rel='stylesheet' href='https://unpkg.com/@mdi/font@6.x/css/materialdesignicons.min.css'>
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'>
-
+  <meta charset="utf-8">
+  <title>ログイン</title>
+  <!-- CDN読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.6.15/dist/vuetify.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.6.15/dist/vuetify.js"></script>
 </head>
 <body>
-<!-- partial:index.partial.html -->
-
-<div id="app">
-  <v-app>
-    <v-content>
+  <div id="app">
+    <v-app>
       <v-container>
-        <v-row class="text-h3 mb-3 mt-3" justify="center">
-          APIに接続してみよう
-        </v-row>
-        <v-row class="mb-3 mt-3" align="center" justify="center">
-          <v-col cols="4">
-            <v-text-field class="ml-6 mr-6" v-model:value="Date" label="Date" placeholder="Dateを入力…" outlined>
+        <!-- タイトル -->
+        <v-row class="text-h4 mb-4" justify="center">ログイン</v-row>
 
-          </v-col>
-          <v-col cols="6">
-            <v-text-field class="ml-6 mr-6" v-model:value="Inout" label="Inout" placeholder="収入支出を入力…" outlined>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field class="ml-6 mr-6" v-model:value="selected" label="Category" placeholder="カテゴリを入力…" outlined>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field class="ml-6 mr-6" v-model:value="Amount" label="Amount" placeholder="Amountを入力…" outlined>
-          </v-col>
-        </v-row>
-        <v-row class="mb-3 mt-3" align="center" justify="center">
-          入力内容　ID: {{ Date }}　　　 Inout: {{ Inout }}　　　 Category: {{ selected }}　　　 Amount: {{ Amount }}
-        </v-row>
-        <v-row class="mb-3 mt-3" align="center" justify="center">
+        <!-- 入力フォーム -->
+        <v-row justify="center">
+          <v-col cols="12" sm="6" md="4">
+            <!-- ユーザー名入力欄 -->
+            <v-text-field 
+              v-model="userid" 
+              label="ユーザーID" 
+              outlined>
+            </v-text-field>
 
-          <v-btn v-on:click="addData" dark small color="indigo">DBに登録
-          </v-btn>
-        </v-row>
-        <v-divider class="my-4"></v-divider>
+            <!-- パスワード入力欄 -->
+            <v-text-field 
+              v-model="password" 
+              label="パスワード" 
+              type="password" 
+              outlined>
+            </v-text-field>
 
-        <v-row class="mb-3 mt-3" justify="center">
-          <v-btn v-on:click="readData" rounded>収支</v-btn>
+            <!-- ログインボタン -->
+            <v-btn color="primary" class="mt-4" block @click="login">ログイン</v-btn>
+
+            <!-- サインアップボタン -->
+            <v-btn text class="mt-2" block @click="goToSignup">新規登録はこちら</v-btn>
+          </v-col>
         </v-row>
-        <v-row class="mb-3 mt-3" justify="center">
-          <v-btn v-on:click="readIncomeData" rounded>収入</v-btn>
-        </v-row>
-        <!--         <v-row class="mb-3 mt-3" justify="center">
-          <v-btn v-on:click="readOutcomeData" rounded>支出</v-btn>
-        </v-row> -->
-        <v-row class="mb-3 mt-3" justify="center" v-for="data in dataList">
-          {{data.Date}} / {{data.Inout}} / {{data.Category}} / {{data.Amount}}
-        </v-row>
+
+        <!-- エラーダイアログ -->
+        <v-dialog v-model="dialog" max-width="400">
+          <v-card>
+            <v-card-title class="headline">エラー</v-card-title>
+            <v-card-text>{{ errorMessage }}</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="dialog = false">閉じる</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
-    </v-content>
-  </v-app>
-</div>
-<!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js'></script><script  src="./script.js"></script>
+    </v-app>
+  </div>
 
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: {
+        userid: '',
+        password: '',
+        errorMessage: '',
+        dialog: false
+      },
+      methods: {
+        // ログイン処理（セッション処理なし）
+        login: async function () {
+          if (!this.userid || !this.password) {
+            this.errorMessage = "ユーザーIDとパスワードを入力してください。";
+            this.dialog = true;
+            return;
+          }
+
+          try {
+            const response = await axios.post('※ここにLOGONAPIのURLを記載※', {
+              ID: this.userid,
+              Password: this.password
+            });
+
+            console.log("レスポンス:", response.data);
+
+            if (response.status === 200 && response.data?.result === "Succeeded") {
+              // ログインに成功した場合はhome.htmlに画面遷移
+              window.location.href = "home.html";
+            } else {
+              this.errorMessage = response.data?.Message || "ログインに失敗しました。";
+              this.dialog = true;
+            }
+          } catch (err) {
+            console.error("ログインエラー:", err);
+            this.errorMessage = "ログインエラー：" + (err.response?.data || err.message);
+            this.dialog = true;
+          }
+        },
+        // サインアップページへ遷移
+        goToSignup() {
+          window.location.href = "signup.html";
+        }
+      }
+    });
+  </script>
 </body>
 </html>

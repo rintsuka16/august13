@@ -1,0 +1,48 @@
+<div id="app">
+  <v-app>
+    <v-content>
+      <v-container>
+        <v-row class="text-h3 mb-3 mt-3" justify="center">
+          APIに接続してみよう
+        </v-row>
+        <v-row class="mb-3 mt-3" align="center" justify="center">
+          <v-col cols="4">
+            <v-text-field class="ml-6 mr-6" v-model:value="Date" label="Date" placeholder="Dateを入力…" outlined>
+
+          </v-col>
+          <v-col cols="6">
+            <v-text-field class="ml-6 mr-6" v-model:value="Inout" label="Inout" placeholder="収入支出を入力…" outlined>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field class="ml-6 mr-6" v-model:value="selected" label="Category" placeholder="カテゴリを入力…" outlined>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field class="ml-6 mr-6" v-model:value="Amount" label="Amount" placeholder="Amountを入力…" outlined>
+          </v-col>
+        </v-row>
+        <v-row class="mb-3 mt-3" align="center" justify="center">
+          入力内容　ID: {{ Date }}　　　 Inout: {{ Inout }}　　　 Category: {{ selected }}　　　 Amount: {{ Amount }}
+        </v-row>
+        <v-row class="mb-3 mt-3" align="center" justify="center">
+
+          <v-btn v-on:click="addData" dark small color="indigo">DBに登録
+          </v-btn>
+        </v-row>
+        <v-divider class="my-4"></v-divider>
+
+        <v-row class="mb-3 mt-3" justify="center">
+          <v-btn v-on:click="readData" rounded>収支</v-btn>
+        </v-row>
+        <v-row class="mb-3 mt-3" justify="center">
+          <v-btn v-on:click="readIncomeData" rounded>収入</v-btn>
+        </v-row>
+        <!--         <v-row class="mb-3 mt-3" justify="center">
+          <v-btn v-on:click="readOutcomeData" rounded>支出</v-btn>
+        </v-row> -->
+        <v-row class="mb-3 mt-3" justify="center" v-for="data in dataList">
+          {{data.Date}} / {{data.Inout}} / {{data.Category}} / {{data.Amount}}
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
+</div>

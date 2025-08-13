@@ -88,7 +88,7 @@
             if (response.status === 200 && response.data?.result === "Succeeded") {
             
               // ログイン成功時にセッション作成APIを呼び出し
-              const sessionResponse = await axios.post('※ここにCreateSessionのURLを記載※', {
+              const sessionResponse = await axios.post('https://m3h-rintarootsuka-0730.azurewebsites.net/api/CreateSession?', {
                 UserId: this.userid,
                 UserName: response.data.userName
               });

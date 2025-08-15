@@ -83,6 +83,7 @@
             });
 
             console.log("レスポンス:", response.data);
+                console.log("aaaaa");
 
             // HTTPレスポンスが200 かつ レスポンスメッセージがSucceededの場合はログオン
             if (response.status === 200 && response.data?.result === "Succeeded") {
@@ -91,10 +92,12 @@
               const sessionResponse = await axios.post('https://m3h-rintarootsuka-0730.azurewebsites.net/api/CreateSession?', {
                 UserId: this.userid,
                 UserName: response.data.userName
+                
               });
 
               if (sessionResponse.status === 200) {
                 // cookieにセッション情報を保存
+                console.log("aaaaa");
                 document.cookie = `session_id=${encodeURIComponent(sessionResponse.data.sessionId)}; path=/; secure; samesite=strict`;
                 console.log("Session ID:", sessionResponse.data.sessionId);
 

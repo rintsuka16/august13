@@ -6,12 +6,14 @@ const app = new Vue({
     Inout: "", //パラメーター「Name」格納変数
     selected: "", //パラメーター「Name」格納変数
     Amount: "", //パラメーター「Name」格納変数
+    // Vue内部で使いたい変数は全てこの中に定義する
+    ID: '', //パラメーター「ID」格納変数
+    Name: '', //パラメーター「Name」格納変数
     dataList: [], // データ表示用配列
-    snackbar: false,     
-    snackbarMessage: '',   
-    dialog: false,       
-    dialogMessage: '' 
-
+    snackbar: false, // スナックバー表示フラグ（成功通知用）
+    snackbarMessage: '', // スナックバーに表示するメッセージ
+    dialog: false, // ダイアログ表示フラグ（セッション切れ通知用）
+    dialogMessage: '' // ダイアログに表示するメッセージ
   },
   
   methods: {

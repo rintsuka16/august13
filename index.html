@@ -56,7 +56,6 @@
       </v-container>
     </v-app>
   </div>
-
   <script>
     new Vue({
       el: '#app',
@@ -83,21 +82,19 @@
             });
 
             console.log("レスポンス:", response.data);
-                console.log("aaaaa");
 
             // HTTPレスポンスが200 かつ レスポンスメッセージがSucceededの場合はログオン
             if (response.status === 200 && response.data?.result === "Succeeded") {
-            
+              console.log("login");
               // ログイン成功時にセッション作成APIを呼び出し
               const sessionResponse = await axios.post('https://m3h-rintarootsuka-0730.azurewebsites.net/api/CreateSession?', {
                 UserId: this.userid,
                 UserName: response.data.userName
-                
               });
+                console.log("login1");
 
               if (sessionResponse.status === 200) {
                 // cookieにセッション情報を保存
-                console.log("aaaaa");
                 document.cookie = `session_id=${encodeURIComponent(sessionResponse.data.sessionId)}; path=/; secure; samesite=strict`;
                 console.log("Session ID:", sessionResponse.data.sessionId);
 
@@ -107,16 +104,17 @@
                 this.errorMessage = "セッションの生成に失敗しました。";
                 this.dialog = true;
               }
-            } else {
-              this.errorMessage = response.data?.Message || "ログインに失敗しました。";
+              } else {
+                this.errorMessage = response.data?.Message || "ログインに失敗しました。";
+                this.dialog = true;
+              }
+              } catch (err) {
+              console.error("ログインエラー:", err);
+              this.errorMessage = "ログインエラー：" + (err.response?.data || err.message);
               this.dialog = true;
-            }
-            } catch (err) {
-            console.error("ログインエラー:", err);
-            this.errorMessage = "ログインエラー：" + (err.response?.data || err.message);
-            this.dialog = true;
-          }
-        },        // サインアップページへ遷移
+              }
+        },
+        // サインアップページへ遷移
         goToSignup() {
           window.location.href = "signup.html";
         }

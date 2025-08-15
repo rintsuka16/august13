@@ -13,6 +13,7 @@ const app = new Vue({
     dialogMessage: '' 
 
   },
+  
   methods: {
     // DBにデータを追加する関数
     addData: async function () {
